@@ -5,11 +5,12 @@ import Logo from '../../img/logo.png';
 
 const Movie = () => {
     const { id } = useParams();
-    const imagePath = "https://image.tmdb.org/t/p/w500";
+    const imagePath = "https://image.tmdb.org/t/p/original";
 
     const [movie, setMovie] = useState({});
     const [relaFilmes, setRelaFilmes] = useState([]);
     const [loading, setLoading] = useState(true);
+    const [trailer, setTrailer] = useState();
 
     const KEY = process.env.REACT_APP_KEY;
 
@@ -26,8 +27,21 @@ const Movie = () => {
                     console.error("No movie data found in the API response.");
                 }
             });
-
     }, [id, KEY]);
+
+    useEffect(() => {
+        fetch(`https://api.themoviedb.org/3/movie/${id}/videos?api_key=${KEY}&language=pt-BR`)
+            .then((resp) => resp.json())
+            .then((resp) => {
+                const respTrailer = resp.results.find((video) => video.type === "Trailer");
+                if (respTrailer) {
+                    setTrailer(respTrailer.key);
+                    console.log(respTrailer);
+                }
+
+
+            })
+    }, [id, KEY])
 
     useEffect(() => {
         if (!loading) {
@@ -62,35 +76,36 @@ const Movie = () => {
                 </div>
             </div>
             <div className="row">
-                <div className="col-1"></div>
-                <div className="col-10">
-                    <h1 className="sublinhado">{movie.title}</h1>
-                </div>
-            </div>
-
-            <div className="row">
-                <div className="col-1"></div>
-                <div className="col-3">
-                    <p>Língua: {movie.original_language}</p>
-                </div>
-            </div>
-
-            <div className="row">
-                <div className="col-1"></div>
-                <div className="col-2">
-                    <p>Nota Média: {movie.vote_average} ({movie.vote_count})</p>
-                </div>
-                <div className="col-3">
-                    <p>Lançamento: {movie.release_date}</p>
-                </div>
-            </div>
-            <div className="row">
-                <div className="col-1"></div>
                 <div className="col-6">
-                    <h5>{movie.overview}</h5>
-                </div>
-            </div>
-            <div className="row">
+                    <div className="row">
+                        <div className="col-1"></div>
+                        <div className="col-11">
+                            <h2 className="sublinhado">{movie.title}</h2>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-1"></div>
+                        <div className="col-3">
+                            <p>Língua: {movie.original_language}</p>
+                        </div>
+                    </div>
+
+                    <div className="row">
+                        <div className="col-1"></div>
+                        <div className="col-4">
+                            <p>Nota Média: {movie.vote_average} ({movie.vote_count})</p>
+                        </div>
+                        <div className="col-4">
+                            <p>Lançamento: {movie.release_date}</p>
+                        </div>
+                    </div>
+                    <div className="row">
+                        <div className="col-1"></div>
+                        <div className="col-11">
+                            <h5>{movie.overview}</h5>
+                        </div>
+                    </div>
+                    <div className="row">
                 <div className="col-1"></div>
                 <div className="col-3">
                     <Link to={`/`}>
@@ -99,6 +114,25 @@ const Movie = () => {
 
                 </div>
             </div>
+                </div>
+                <div className="col-6">
+                    <div className="row" style={{ height: "100%" }}>
+                        <div className="col-2"></div>
+                        <div className="col-8">
+                            {trailer && (
+                                <div className="row">
+                                    <div className="col-2"></div>
+                                    <div className="col-10" >
+                                        <iframe src={`http://www.youtube.com/embed/${trailer}`} style={{ width: "100%", height: "35vh" }} allow="autoplay" allowFullScreen="true" ></iframe>
+                                    </div>
+                                </div>
+                            )}
+                        </div>
+                    </div>
+
+                </div>
+            </div>
+
 
             <div className="container mt-5">
                 <div className="col-sm-1"></div>

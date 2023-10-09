@@ -54,7 +54,10 @@ function Home() {
                     <a href="#filmes-ranqueados" className="sem-decoracao text-white">Melhores Filmes</a>
                     <div className="d-flex">
                         <input className="form-control me-2" id="input" type="search" placeholder="Tal Filme..." aria-label="Search" />
-                        <button className="btn btn-light" onClick={buscarFilme}>Procurar</button>
+                        <a href="#pesquisados">
+                            <button className="btn btn-light"  onClick={buscarFilme}>Procurar</button>
+                        </a>
+                        
                     </div>
 
                 </div>
@@ -95,6 +98,7 @@ function Home() {
                     <span className="visually-hidden">Next</span>
                 </button>
             </div>
+            <div id="pesquisados"></div>
             <div className="container">
                 {(searchMovies.length > 0) && (
                     <>
